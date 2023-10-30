@@ -2,6 +2,7 @@ public class ServerConnection extends Component {
     
     private DatagramSocket socket;
     private InetAddress address;
+    public String hard_ip = "192.168.2.105";
     private String client_id;
     private long timestamp;
     private int ping;
@@ -146,7 +147,7 @@ public class ServerConnection extends Component {
             return "localhost";
         }
         
-        return ip;
+        return hard_ip;
     }
     
     private int get_host_port() {
