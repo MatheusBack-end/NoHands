@@ -28,12 +28,13 @@ public class ServerConnection extends Component {
                 player.player_object.destroy();
                 players.remove(player);
             } else if(player.player_object == null) {
-                SpatialObject spatial = myObject.instantiate(player_object, player.position, player.rotation);
+                
+                SpatialObject spatial = myObject.instantiate(player_object);
                 spatial.setName(player.name);
                 player.player_object = spatial;
             } else {
                 player.player_object.position = player.position;
-                player.player_object.rotation = player.rotation;
+                //player.player_object.rotation = player.rotation;
             }
         }
     }
@@ -67,11 +68,11 @@ public class ServerConnection extends Component {
     }
     
     public void ping_server() {
-        PingPacket packet = new PingPacket();
+        /*PingPacket packet = new PingPacket();
         timestamp = java.lang.System.currentTimeMillis();
         packet.timestamp = timestamp;
         packet.encode();
-        send_server(packet.buffer.array());
+        send_server(packet.buffer.array());*/
     }
     
     public void close_connection(String client_id) {
@@ -159,13 +160,31 @@ public class ServerConnection extends Component {
         return port;
     }
     
+    private void add_player(final PlayerSession player)
+    {
+        Thread.runOnEngine(new Runnable()
+        {
+            public void run()
+            {
+                SpatialObject object = myObject.instantiate(player_object);
+                player.player_object = object;
+                players.add(player);
+            }
+        });
+    }
     
-    public void async_server_listener() {
-        new AsyncTask(new AsyncRunnable() {
+    
+    public void async_server_listener()
+    {
+        new AsyncTask(new AsyncRunnable()
+        {
            
-           public Object onBackground(Object input) {
-               try {
-                   while(true) {
+           public Object onBackground(Object input)
+           {
+               try
+               {
+                   while( true )
+                   {
                        byte[] pk = read_server();
                        ByteBuffer buffer = ByteBuffer.wrap(pk);
                        buffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -180,7 +199,8 @@ public class ServerConnection extends Component {
                             OpenSessionPacket packet = new OpenSessionPacket();
                             packet.buffer = buffer;
                             packet.decode();
-                            players.add(packet.player_session);
+                            
+                            add_player(packet.player_session);
                        }
                        
                        if(pid == 0x02) {

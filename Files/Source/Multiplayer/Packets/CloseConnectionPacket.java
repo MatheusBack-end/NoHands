@@ -14,6 +14,7 @@ public class CloseConnectionPacket {
     
     public void encode() {
         buffer = ByteBuffer.allocate(11);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put((byte) PID);
         BinaryUtils.write_string(buffer, client_id, 10);
     }

@@ -14,6 +14,7 @@ public class PingPacket {
     
     public void encode() {
         buffer = ByteBuffer.allocate(9);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put((byte) PID);
         buffer.putLong(timestamp);
     }

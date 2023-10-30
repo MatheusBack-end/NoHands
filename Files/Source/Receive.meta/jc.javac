@@ -1,0 +1,26 @@
+package JAVARuntime;
+
+@ClassCategory(cat={"Custom ThermalFlow Scripts"})
+public class Receive extends JAVARuntime.Component {
+
+
+   @Override
+   public void start(){
+      //<Identity(1)>
+      {
+      }
+      //>Identity(1)<
+   }
+
+   @Override
+   public void repeat(){
+      //<Identity(2)>
+      {
+         if(null == null){
+            throw new ThermalFlowError("Can't call (rotateInSeconds) on a null Transform on block: 0", "2->0");
+         }
+      }
+      //>Identity(2)<
+   }
+
+}

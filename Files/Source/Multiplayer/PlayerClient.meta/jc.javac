@@ -5,6 +5,7 @@ public class PlayerClient extends Component
     public String player_name = "player";
     public SUIText ping_viewer;
     private float timer;
+    public int my_life = 100;
     
     @Override
     public void start()

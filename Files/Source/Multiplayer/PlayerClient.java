@@ -15,7 +15,6 @@ public class PlayerClient extends Component
             connection = WorldController.findObject("server").findComponent(ServerConnection.class);
         }
         
-        connection.my_player = this;
         connection.open_connection(get_client_id(), player_name, myTransform.position, myTransform.rotation);
         connection.async_server_listener();
     }
