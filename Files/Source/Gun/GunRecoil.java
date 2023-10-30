@@ -1,0 +1,38 @@
+public class GunRecoil extends Component implements Gun
+{
+    // config variables
+    public float Speed, Force, BackForce;
+    
+    private Quaternion recoil = new Quaternion();
+    private Vector3 back_recoil = new Vector3();
+    
+    public void on_shot()
+    {
+        recoil.setFromEuler(-Force, 0, 0);
+        back_recoil.setZ(-BackForce);
+        
+        apply_force();
+    }
+    
+    private void apply_force()
+    {
+        myTransform.rotation.mulLocal(recoil);
+        myTransform.setPosition(back_recoil);
+    }
+    
+    public void repeat()
+    {
+        to_original_position();
+    }
+    
+    private void to_original_position()
+    {
+        myObject.rotation.blend(Quaternion.zero(), Time.deltaTime() / Speed);
+        myObject.position.blend(Vector3.zero(), Time.deltaTime() / Speed);
+    }
+    
+    public String getComponentMenu()
+    {
+        return "Gun";
+    }
+}
