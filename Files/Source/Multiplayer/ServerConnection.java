@@ -167,7 +167,7 @@ public class ServerConnection extends Component {
         {
             public void run()
             {
-                SpatialObject object = myObject.instantiate(player_object, player.position, player.rotation);
+                SpatialObject object = myObject.instantiate(player_object, player.position);
                 player.player_object = object;
                 PlayerObjectData object_data = object.findComponent(PlayerObjectData.class);
                 object_data.session = player;
@@ -211,15 +211,24 @@ public class ServerConnection extends Component {
                            packet.buffer = buffer;
                            packet.decode();
                            PlayerSession player = get_player_by_id(packet.client_id);
-                           player.position = packet.position;
-                           player.rotation = packet.rotation;
+                           
+                           if(player != null)
+                           {
+                               player.position = packet.position;
+                               player.rotation = packet.rotation;
+                           }
                        }
                        
                        if(pid == 0x04) {
                            StartGamePacket packet = new StartGamePacket();
                            packet.buffer = buffer;
                            packet.decode();
-                           players = packet.players;
+                           
+                           for(PlayerSession session: packet.players)
+                           {
+                               add_player(session);
+                           }
+                           
                        }
                         
                        if(pid == 0x05) {
@@ -244,7 +253,11 @@ public class ServerConnection extends Component {
                            else
                            {
                                PlayerSession player = get_player_by_id(packet.client_id);
-                               player.life -= 10;
+                               
+                               if(player != null)
+                               {
+                                   player.life -= 10;
+                               }
                            }
                        }
                    }
