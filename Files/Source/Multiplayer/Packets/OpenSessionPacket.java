@@ -17,8 +17,8 @@ public class OpenSessionPacket {
     }
     
     public void encode() {
-        buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer = ByteBuffer.allocate(55);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put((byte) PID);
         BinaryUtils.write_string(buffer, client_id, 10);
         BinaryUtils.write_string(buffer, player_name, 20);

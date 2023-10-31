@@ -20,9 +20,16 @@ public class GunShot extends Component implements Gun
         {
             if(hit.getObject().getTag().equals("player"))
             {
-                connection.hit("abcdefjklm", player_client.get_client_id());
+                connection.hit(get_session_id(hit.getObject()), player_client.get_client_id());
             }
         }
+    }
+    
+    public String get_session_id(SpatialObject player_object)
+    {
+        PlayerObjectData session_data = player_object.findComponent(PlayerObjectData.class);
+        
+        return session_data.session.client_id;
     }
     
     public Vector3 get_midle()

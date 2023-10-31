@@ -35,7 +35,7 @@ public class ServerConnection extends Component {
                 player.player_object = spatial;
             } else {
                 player.player_object.position = player.position;
-                //player.player_object.rotation = player.rotation;
+                player.player_object.rotation = player.rotation;
             }
         }
     }
@@ -69,11 +69,11 @@ public class ServerConnection extends Component {
     }
     
     public void ping_server() {
-        /*PingPacket packet = new PingPacket();
+        PingPacket packet = new PingPacket();
         timestamp = java.lang.System.currentTimeMillis();
         packet.timestamp = timestamp;
         packet.encode();
-        send_server(packet.buffer.array());*/
+        send_server(packet.buffer.array());
     }
     
     public void close_connection(String client_id) {
@@ -167,8 +167,10 @@ public class ServerConnection extends Component {
         {
             public void run()
             {
-                SpatialObject object = myObject.instantiate(player_object);
+                SpatialObject object = myObject.instantiate(player_object, player.position, player.rotation);
                 player.player_object = object;
+                PlayerObjectData object_data = object.findComponent(PlayerObjectData.class);
+                object_data.session = player;
                 players.add(player);
             }
         });
