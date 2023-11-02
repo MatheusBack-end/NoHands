@@ -9,6 +9,7 @@ public class ServerConnection extends Component {
     public int port;
     public ObjectFile player_object;
     public List<PlayerSession> players = new ArrayList();
+    public PlayerSession my_session;
 
     @Override
     public void start() {
@@ -61,6 +62,7 @@ public class ServerConnection extends Component {
     public void open_connection(String client_id, String player_name, Vector3 position, Quaternion rotation) {
         OpenSessionPacket packet = new OpenSessionPacket();
         packet.client_id = client_id;
+        this.client_id = client_id;
         packet.player_name = player_name;
         packet.position = position;
         packet.rotation = rotation;
@@ -247,7 +249,7 @@ public class ServerConnection extends Component {
                            
                            if(packet.client_id.equals(client_id))
                            {
-                               Console.log("hit me!");
+                               my_session.life -= 10;
                            }
                            
                            else

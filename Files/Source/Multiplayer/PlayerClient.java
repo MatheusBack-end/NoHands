@@ -5,7 +5,10 @@ public class PlayerClient extends Component
     public String player_name = "player";
     public SUIText ping_viewer;
     private float timer;
-    public int my_life = 100;
+    public SUIText my_life;
+    public PlayerSession my_session = new PlayerSession();
+    public boolean is_dead = false;
+    public SpatialObject spawn;
     
     @Override
     public void start()
@@ -15,6 +18,7 @@ public class PlayerClient extends Component
             connection = WorldController.findObject("server").findComponent(ServerConnection.class);
         }
         
+        connection.my_session = my_session;
         connection.open_connection(get_client_id(), player_name, myTransform.position, myTransform.rotation);
         connection.async_server_listener();
     }
@@ -22,6 +26,14 @@ public class PlayerClient extends Component
     @Override
     public void repeat()
     {
+        is_dead = is_dead();
+        
+        if(is_dead)
+        {
+            reset_position();
+            my_session.life = 100;
+        }
+        
         timer += Math.bySecond();
         
         if(timer >= 2f)
@@ -33,6 +45,17 @@ public class PlayerClient extends Component
         connection.update_position(get_client_id(), myTransform.position, myTransform.rotation);
         
         ping_viewer.setText("ping: " + connection.get_ping());
+        my_life.setText("" + my_session.life);
+    }
+    
+    public boolean is_dead()
+    {
+        return my_session.life <= 0;
+    }
+    
+    public void reset_position()
+    {
+        myObject.teleportTo(spawn);
     }
     
     @Override
