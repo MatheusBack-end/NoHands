@@ -107,12 +107,12 @@ public class ServerConnection extends Component {
         client_id = cid;
     }
     
-    public byte[] read_server() {
+    public ByteBuffer read_server() {
         try {
             DatagramPacket packet = new DatagramPacket(new byte[256], 256);
             socket.receive(packet);
             
-            return packet.getData();
+            return ByteBuffer.wrap(packet.getData());
         } catch(Exception e) {
             Console.log(e);
         }
@@ -163,7 +163,7 @@ public class ServerConnection extends Component {
         return port;
     }
     
-    private void add_player(final PlayerSession player)
+    public void add_player(final PlayerSession player)
     {
         Thread.runOnEngine(new Runnable()
         {
@@ -178,6 +178,37 @@ public class ServerConnection extends Component {
         });
     }
     
+    public void remove_player(final PlayerSession player)
+    {
+        player.active = false;
+    }
+    
+    public void update_player_position(String client_id, Vector3 position, Quaternion rotation)
+    {
+        PlayerSession player = get_player_by_id(client_id);
+                           
+        if(player != null)
+        {
+            player.position = position;
+            player.rotation = rotation;
+        }
+    }
+    
+    public void damage_by_hit(String damager_id)
+    {
+        if(damager_id.equals(client_id))
+        {
+            my_session.life -= 10;
+            return;
+        }
+                       
+        PlayerSession player = get_player_by_id(damager_id);
+                               
+        if(player != null)
+        {
+            player.life -= 10;
+        }
+    }
     
     public void async_server_listener()
     {
@@ -188,10 +219,9 @@ public class ServerConnection extends Component {
            {
                try
                {
-                   while( true )
+                   while(true)
                    {
-                       byte[] pk = read_server();
-                       ByteBuffer buffer = ByteBuffer.wrap(pk);
+                       ByteBuffer buffer = read_server();
                        buffer.order(ByteOrder.LITTLE_ENDIAN);
                        
                        byte pid = buffer.get();
@@ -274,6 +304,11 @@ public class ServerConnection extends Component {
         });
     }
     
+    
+    public void set_ping(double current_time)
+    {
+        ping = (int) (current_time - timestamp);
+    }
     
     public String getComponentMenu()
     {

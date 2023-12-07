@@ -19,7 +19,7 @@ public class PlayerClient extends Component
         }
         
         connection.my_session = my_session;
-        connection.open_connection(get_client_id(), player_name, myTransform.position, myTransform.rotation);
+        connection.open_connection(get_client_id(), GameData.get_username(), myTransform.getPosition(), myTransform.getRotation());
         connection.async_server_listener();
     }
 

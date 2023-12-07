@@ -17,10 +17,12 @@ public class OpenSessionPacket {
     }
     
     public void encode() {
-        buffer = ByteBuffer.allocate(55);
+        buffer = ByteBuffer.allocate(59);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put((byte) PID);
+        buffer.putShort((short) client_id.length());
         BinaryUtils.write_string(buffer, client_id, 10);
+        buffer.putShort((short) player_name.length());
         BinaryUtils.write_string(buffer, player_name, 20);
         BinaryUtils.write_vector3(buffer, position);
         BinaryUtils.write_quaternion(buffer, rotation);

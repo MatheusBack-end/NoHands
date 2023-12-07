@@ -9,7 +9,7 @@ public class BinaryUtils {
     }
     
     public static String read_string(ByteBuffer buffer, int size) {
-        byte[] destiny = new byte[size];
+        byte[] destiny = new byte[buffer.getShort()];
         
         for(int i = 0; i < size; i++) {
             destiny[i] = buffer.get();
