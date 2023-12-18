@@ -48,6 +48,7 @@ public class BinaryUtils {
     }
     
     public static void write_string(ByteBuffer buffer, String string, int size) {
+        buffer.putShort((short) size);
         buffer.put(write_string(string, size));
     }
     

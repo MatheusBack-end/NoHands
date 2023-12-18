@@ -15,7 +15,7 @@ public class UpdatePositionPacket {
     }
     
     public void encode() {
-        buffer = ByteBuffer.allocate(35);
+        buffer = ByteBuffer.allocate(37);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put((byte) PID);
         BinaryUtils.write_vector3(buffer, position);
