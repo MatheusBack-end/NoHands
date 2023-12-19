@@ -1,2 +1,5 @@
 S/Unix shell started, type your command.
+>- S:NoHands/sh: can't find: tty fd No such device or address
+>- S:NoHands/sh: warning: won't have full job control
+>- S:NoHands/ :NoHands $ 
 >- S:NoHands/Shell finalized

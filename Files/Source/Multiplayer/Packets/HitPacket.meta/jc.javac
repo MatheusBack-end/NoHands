@@ -7,7 +7,7 @@ public class HitPacket
     
     public void encode()
     {
-        buffer = ByteBuffer.allocate(21);
+        buffer = ByteBuffer.allocate(25);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.put((byte) PID);
         BinaryUtils.write_string(buffer, client_id, 10);

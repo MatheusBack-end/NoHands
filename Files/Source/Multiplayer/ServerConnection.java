@@ -258,6 +258,7 @@ public class ServerConnection extends Component {
                            
                            for(PlayerSession session: packet.players)
                            {
+                               Console.log(session.name);
                                add_player(session);
                            }
                            
@@ -267,6 +268,15 @@ public class ServerConnection extends Component {
                             CloseConnectionPacket packet = new CloseConnectionPacket();
                             packet.buffer = buffer;
                             packet.decode();
+                            
+                            Console.log(packet.client_id);
+                            
+                            if(packet.client_id.equals(client_id)) {
+                                Console.log("disconnected by: " + packet.reason);
+                                my_session.life = 69;
+                                continue;
+                            }
+                            
                             PlayerSession player = get_player_by_id(packet.client_id);
                             player.active = false;
                        }
