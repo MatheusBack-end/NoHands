@@ -281,6 +281,15 @@ public class ServerConnection extends Component {
                             player.active = false;
                        }
                        
+                       if(pid == 0x08) {
+                           PlayerDeathPacket packet = new PlayerDeathPacket();
+                           packet.buffer = buffer;
+                           packet.decode();
+                           
+                           my_session.life = 0;
+                           Console.log("death by: " + packet.damager_id);
+                       }
+                       
                        if(pid == 0x09)
                        {
                            HitPacket packet = new HitPacket();
