@@ -26,6 +26,8 @@ public class PlayerClient extends Component
     @Override
     public void repeat()
     {
+        //connection.async_server_listener();
+                          
         is_dead = is_dead();
         
         if(is_dead)

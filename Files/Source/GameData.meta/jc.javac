@@ -20,6 +20,9 @@ public class GameData
     
     public static String get_username()
     {
+        if(username == null)
+            username = SaveGame.loadString("username");
+            
         return username;
     }
 }

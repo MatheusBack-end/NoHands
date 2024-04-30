@@ -1,4 +1,6 @@
-public class ServerConnection extends Component {
+import java.nio.channels.*;
+
+public class ServerConnection extends Component implements IServerConnection {
     
     private DatagramSocket socket;
     private InetAddress address;
@@ -10,10 +12,12 @@ public class ServerConnection extends Component {
     public ObjectFile player_object;
     public List<PlayerSession> players = new ArrayList();
     public PlayerSession my_session;
+    private IReceiveServer serverReceive;
 
     @Override
     public void start() {
         bind_socket();
+        serverReceive = new ServerReceive((IServerConnection) this);
     }
 
     @Override
@@ -108,10 +112,14 @@ public class ServerConnection extends Component {
     }
     
     public ByteBuffer read_server() {
-        try {
+        try {     
+            socket.setSoTimeout(0);
             DatagramPacket packet = new DatagramPacket(new byte[256], 256);
             socket.receive(packet);
             
+            if(packet.getData() == null)
+                return null;
+                
             return ByteBuffer.wrap(packet.getData());
         } catch(Exception e) {
             Console.log(e);
@@ -135,7 +143,7 @@ public class ServerConnection extends Component {
         try {
             address = InetAddress.getByName(get_host_ip());
             port = get_host_port();
-            socket = new DatagramSocket();       
+            socket = new DatagramSocket();
         } catch(Exception e) {
             Console.log(e);
         }
@@ -210,17 +218,22 @@ public class ServerConnection extends Component {
         }
     }
     
-    public void async_server_listener()
-    {
-        new AsyncTask(new AsyncRunnable()
-        {
+    public void async_server_listener() {
+        //serverReceive.receivePackets();
+        new AsyncTask(new AsyncRunnable() {
            
-           public Object onBackground(Object input)
-           {
-               try
-               {
-                   while(true)
-                   {
+           public Object onBackground(Object input) {
+               try {
+                   while(1 > 0) {
+                       serverReceive.receivePackets();
+                   }
+               }  catch(Exception e) {
+                   
+               }
+               
+               return null;
+           }
+                       /*
                        ByteBuffer buffer = read_server();
                        buffer.order(ByteOrder.LITTLE_ENDIAN);
                        
@@ -311,13 +324,14 @@ public class ServerConnection extends Component {
                                }
                            }
                        }
-                   }
+                   }  
                } catch(Exception e) {
                    Console.log(e);
                }
                
                return null;
-           }
+               
+           }*/
            
            public void onEngine(Object result){}
         });
